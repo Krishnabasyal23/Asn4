@@ -1,11 +1,11 @@
 const express = require("express");
-const app = express();
 const path = require("path");
 const multer = require("multer");
+const app = express();
 const fs = require("fs");
 app.use(express.static("public"));
 // Multer setup: store files temporarily before renaming
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: path.join(__dirname, "upload") });
 // get image name
 app.get("/api/getImage", (req, res) => {
     const name = req.query.name;
@@ -21,7 +21,7 @@ app.get("/api/getImage", (req, res) => {
         }
     });
 });
-app.post("/api/public/upload", upload.single("image"), (req, res) => {
+app.post("/api//upload", upload.single("image"), (req, res) => {
     const name = req.query.name;
 
     if (!name) {
@@ -42,11 +42,10 @@ app.post("/api/public/upload", upload.single("image"), (req, res) => {
             message: `image for '${name}' uploaded successfully`,
             savedAs: `${name}.png`
         });
-
     });
 
 });
 // start server
-app.listen(3000, () => {
+app.listen(3001, () => {
     console.log("server running on http://localhost:3000");
 });

@@ -1,14 +1,16 @@
 const express = require("express");
 const path = require("path");
 const multer = require("multer");
-const uploads=multer({dest:"upload/"});
-const app = express();
 const fs = require("fs");
-const cors= require("cors");
+const cors = require("cors");
+const app = express();
 app.use(cors());
 app.use(express.static("public"));
+// Ensure upload folder exists
+fs.mkdirSync(path.join(__dirname,"upload"), {recursive:true});
 // Multer setup: store files temporarily before renaming
 const upload = multer({ dest: path.join(__dirname, "upload") });
+
 // get image name
 app.get("/api/getImage", (req, res) => {
     const name = req.query.name;
@@ -17,13 +19,13 @@ app.get("/api/getImage", (req, res) => {
         return res.status(400).json({ error: "Missing? name= query parameter" });
     }
     const filePath = path.join(__dirname, "public", `${name}.png`);
-    // send the image if it exists
-    res.sendFile(filePath, (err) => {
-        if (err) {
+        if (!fs.existSync (filePath)) {
             res.status(404).json({ error: "Image not Found" });
         }
+        res.sendFile(filePath)
     });
-});
+
+    //post upload
 app.post("/api/upload", upload.single("image"), (req, res) => {
     const name = req.query.name;
 

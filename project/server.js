@@ -1,9 +1,10 @@
 const express = require("express");
 const path = require("path");
 const multer = require("multer");
+const uploads=multer({dest:"upload/"});
 const app = express();
 const fs = require("fs");
-const cors= require("cors");4
+const cors= require("cors");
 app.use(cors());
 app.use(express.static("public"));
 // Multer setup: store files temporarily before renaming
@@ -23,7 +24,7 @@ app.get("/api/getImage", (req, res) => {
         }
     });
 });
-app.post("/api//upload", upload.single("image"), (req, res) => {
+app.post("/api/upload", upload.single("image"), (req, res) => {
     const name = req.query.name;
 
     if (!name) {
@@ -49,5 +50,5 @@ app.post("/api//upload", upload.single("image"), (req, res) => {
 });
 // start server
 app.listen(3001, () => {
-    console.log("server running on http://localhost:3000");
+    console.log("server running on http://localhost:3001");
 });

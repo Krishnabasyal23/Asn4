@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { uploadImage} from "./uploadApi";
 function App() {
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
@@ -32,6 +32,38 @@ function App() {
   };
   return (
     <div style={{ padding: "30px", fontFamily: "Arial" }}>
+      <div style={{marginBottom:"40px"}}>
+        <h2>Upload Image</h2>
+        <input
+        type="Text"
+        placeholder="Enter name to save image"
+        value={name}
+        onChange={(e)=>setName(e.target.value)}
+        style={{padding:"8 px", marginRight:"10px"}}
+        />
+        <input 
+        type="file"
+        id="uploadFile"
+        style={{marginRight:"10px"}}
+        />
+        <button
+        onClick= {async()=>{
+          const fileInput=document.getElementById("uploadFile");
+          const file=fileInput.files[0];
+          if(!name|| !file){
+            setError("Enter name and choose a file first");
+            return;
+          }
+          setError("");
+          const res=await uploadImage(name,file);
+          if (res.error)setError(res.error);
+          else alert("Uploaded successfully!");
+        }}
+        style={{padding:"8px 16px"}}
+        >
+          Upload
+        </button>
+      </div>
       <h1> Image Search </h1>
       <input
         type="text"

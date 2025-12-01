@@ -34,27 +34,27 @@ function App() {
       setError("Server error");
     }
   };
-  const handleUpload = async () => {
-    if (!uploadName || !uploadFile) {
-      setUploadMessage("Please enter name and select file");
-      return;
-    }
-    const formData = new FormData();
-    FormData.append("image", uploadFile);
-    try {
-      const response = await fetch(
-        `http://localhost:3001/api/upload?name=${uploadName}`,
-        { method: "POST", body: formData }
-      );
-      if (!response.ok) {
-        setUploadMessage("Upload Failed");
-        return;
-      }
-      setUploadMessage("Upload successful! Try searching again.");
-    }catch (err){
-      setUploadMessage("Server error during upload. ")
-    }
-  };
+  // const handleUpload = async () => {
+  //   if (!uploadName || !uploadFile) {
+  //     setUploadMessage("Please enter name and select file");
+  //     return;
+  //   }
+  //   const formData = new FormData();
+  //   formData.append("image", uploadFile);
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3001/api/upload?name=${uploadName}`,
+  //       { method: "POST", body: formData }
+  //     );
+  //     if (!response.ok) {
+  //       setUploadMessage("Upload Failed");
+  //       return;
+  //     }
+  //     setUploadMessage("Upload successful! Try searching again.");
+  //   } catch (err) {
+  //     setUploadMessage("Server error during upload. ")
+  //   }
+  //};
   return (
     <div style={{ padding: "30px", fontFamily: "Arial" }}>
       <div style={{ marginBottom: "40px" }}>
@@ -62,39 +62,42 @@ function App() {
         <input
           type="Text"
           placeholder="Enter name to save image"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ padding: "8 px", marginRight: "10px" }}
+          value={uploadName}
+          onChange={(e) => setUploadName(e.target.value)}
+          style={{ padding: "8px", marginRight: "10px" }}
         />
         <input
           type="file"
           id="uploadFile"
           style={{ marginRight: "10px" }}
+          onChange={(e) => setUploadFile(e.target.files[0])}
         />
         <button
           onClick={async () => {
-            const fileInput = document.getElementById("uploadFile");
-            const file = fileInput.files[0];
-            if (!name || !file) {
-              setError("Enter name and choose a file first");
+            // const fileInput = document.getElementById("uploadFile");
+            // const file = fileInput.files[0];
+            if (!uploadName || !uploadFile) {
+              setUploadMessage("Enter name and choose a file first");
               return;
             }
             setError("");
-            const res = await uploadImage(name, file);
+            const res = await uploadImage(uploadName, uploadFile);
             if (res.error) setError(res.error);
-            else alert("Uploaded successfully!");
+            else setUploadMessage ("Uploaded successfully!");
           }}
           style={{ padding: "8px 16px" }}
         >
           Upload
         </button>
+        {uploadMessage &&(
+          <p style={{color:"flexDirection, marginTop:10px"}}>{uploadMessage}</p>
+        )}
       </div>
       <h1> Image Search </h1>
       <input
         type="text"
         placeholder="Enter name ( tom, jerry, dog)"
         value={name}
-
         onChange={(e) => setName(e.target.value)}
         style={{ padding: "8px", marginRight: "10px" }}
       />

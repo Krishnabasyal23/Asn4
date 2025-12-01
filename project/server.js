@@ -19,10 +19,12 @@ app.get("/api/getImage", (req, res) => {
         return res.status(400).json({ error: "Missing? name= query parameter" });
     }
     const filePath = path.join(__dirname, "public", `${name}.png`);
-        if (!fs.existSync (filePath)) {
+        if (!fs.existsSync(filePath)) {
             res.status(404).json({ error: "Image not Found" });
+            return;
         }
-        res.sendFile(filePath)
+        res.setHeader("Content-Type", "image/png");
+        res.sendFile(filePath);
     });
 
     //post upload
@@ -30,7 +32,7 @@ app.post("/api/upload", upload.single("image"), (req, res) => {
     const name = req.query.name;
 
     if (!name) {
-        return res.status(400).json({ error: "Missing ? name= query parameter" });
+        return res.status(400).json({ error: "Missing ?name=query parameter" });
     }
     if (!req.file) {
         return res.status(400).json({ error: "No image file uploaded" });

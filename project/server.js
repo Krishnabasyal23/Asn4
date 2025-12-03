@@ -3,6 +3,8 @@ const path = require("path");
 const multer = require("multer");
 const app = express();
 const fs = require("fs");
+const cors= require("cors");4
+app.use(cors());
 app.use(express.static("public"));
 // Multer setup: store files temporarily before renaming
 const upload = multer({ dest: path.join(__dirname, "upload") });
